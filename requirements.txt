@@ -1,3 +1,4 @@
 pytest==8.3.2
 simple_screen==0.1.16
 windows-curses==2.3.3
+SQLite version 3.46.0 2024-05-23 13:25:27 (UTF-16 console I/O)
