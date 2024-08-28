@@ -63,16 +63,33 @@ class DAO_Product(DAO):
                 for row in cursor.fetchall():
                     product = Product(*row)
                     products_list.append({
-                        "id": product.id,
-                        "name": product.name,
-                        "unit_price": product.unit_price
+                        "id": row[0],
+                        "name": row[1],
+                        "unit_price": row[2]
                     })
                 return products_list
 
         except sqlite3.Error as e:
             print(f"Error accessing database: {e}")
-        return []
-
+            return []
+        
+    def get_product_by_id(self, product_id: int):
+        try:
+            with self.conn:
+                cursor = self.conn.cursor()
+                cursor.execute("SELECT id, name, unit_price FROM products WHERE id = ?", (product_id,))
+                row = cursor.fetchone()
+                if row:
+                    return {
+                        "id": row[0],
+                        "name": row[1],
+                        "unit_price": row[2]
+                    }
+                else:
+                    return None
+        except sqlite3.Error as e:
+            print(f"Error accessing database: {e}")
+            return None
 
 class Ticket:
     def __init__(self):
@@ -97,4 +114,4 @@ class Ticket:
         for item in self.products.values():
             total += item["subtotal"]
         return total
-            
+         
