@@ -53,7 +53,7 @@ class DAO_Product(DAO):
 
     def __del__(self):
         self.conn.close()
-
+    # Getting all products in a list of dictionaries
     def get_all_products(self):
         try:
             with self.conn:
@@ -72,7 +72,7 @@ class DAO_Product(DAO):
         except sqlite3.Error as e:
             print(f"Error accessing database: {e}")
             return []
-        
+    # Verify if a product id inserted by user is in our database     
     def get_product_by_id(self, product_id: int):
         try:
             with self.conn:
@@ -94,7 +94,7 @@ class DAO_Product(DAO):
 class Ticket:
     def __init__(self):
         self.products = {}
-
+    # Add each product and quantity by user getting a subtotal per product 
     def add_product(self, product, quantity):
         if product["id"] in self.products:
             self.products[product["id"]]["quantity"] += quantity
@@ -104,11 +104,11 @@ class Ticket:
                 "quantity": quantity
             }
         self.products[product["id"]]["subtotal"] = self.products[product["id"]]["quantity"] * product["unit_price"]
-
+    # Update all quantities in a list of dictionaries
     def update_quantities(self, products_list):
         for product in products_list:
             self.add_product(product, product["quantity"])
-
+    # Getting a total for the purchase
     def total_product_list(self):
         total = 0
         for item in self.products.values():

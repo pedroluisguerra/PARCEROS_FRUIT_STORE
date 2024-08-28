@@ -2,6 +2,7 @@ from simple_screen import locate, DIMENSIONS, Input, Screen_manager
 import sqlite3
 
 class TitleView:
+    # Main title 
     def __init__(self, texto: str, y: int = 0):
         self.texto = texto
         self.y = y
@@ -11,7 +12,7 @@ class TitleView:
         locate(x, self.y, self.texto)
 
 class ProductsView:
-
+    # Visualizing the products list available in our database
     def __init__(self, dao_product, x: int, y: int, w: int):
         self.dao_product = dao_product
         self.x = x
@@ -40,6 +41,7 @@ class ProductsView:
             return ""
 
 class TicketView:
+    # Visualizing user's purchase, listing all products and quantities inserted by the user
     def __init__(self, ticket, dao_product, product_id: int, quantity:int, x: int, y: int, w: int):
         self.ticket = ticket
         self.dao_product = dao_product
