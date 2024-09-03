@@ -18,7 +18,7 @@ Requirement.txt: Contiene todas las dependencias que necesitan instalarse para g
 
 Estatus del proyecto:
 
- el "back" necesario considero lo tengo terminado, pero estoy teniendo problemas con la vizualización de lista completa de los productos en class ProductsView, sólo me "pinta" el primer producto de la lista de 10, he intentado y buscado en ChatGPT, COPILOT pero no consigo el error en el bucle, por eso he pedido tu ayuda.
+ el "back" necesario considero lo tengo terminado, pero estoy teniendo problemas con la vizualización de lista completa de los productos en class ProductsView (app/fronting.py), sólo me "pinta" el primer producto de la lista de 10, he intentado y buscado en ChatGPT, COPILOT pero no consigo el error en el bucle, por eso he pedido tu ayuda.
 
  Observaciones: Creo que entendí mal el ejercicio, pensé que se tenía que listar los productos y luego generar por separado un ticket con los productos comprados, de eso me acabo de dar cuenta, no sé si eso podría tener un gran impacto en la evaluación o podría ser aceptable, cuando se haga la prueba de vistas, tal cual como está hora podra ver la intención de mi visualización.
 

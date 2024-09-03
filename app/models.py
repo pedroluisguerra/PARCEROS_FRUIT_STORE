@@ -1,10 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import sqlite3
 
 
 class Product:
-
-    @classmethod
 
     def __init__(self, id: int, name: str, unit_price: float):
         self.id = id
@@ -23,25 +21,6 @@ class Product:
         return f"Product ({self.id}): {self.name}" 
 
 class DAO(ABC):
-    '''
-    @abstractmethod
-    def save_product(self,instancia):
-        pass
-
-    @abstractmethod
-    def update_product(self,):
-        pass
-
-    @abstractmethod
-    def delete_product(self):
-        pass
-
-    @abstractmethod
-    def check_product(self):
-        pass
-    '''
-
-    @abstractmethod
     def get_all_products(self):
         pass
 
@@ -49,69 +28,60 @@ class DAO_Product(DAO):
 
     def __init__(self, path):
         self.path = path
-        self.conn = sqlite3.connect(self.path)
+        
 
-    def __del__(self):
-        self.conn.close()
     # Getting all products in a list of dictionaries
     def get_all_products(self):
-        try:
-            with self.conn:
-                cursor = self.conn.cursor()
-                cursor.execute("SELECT id, name, unit_price FROM products")
-                products_list = []
-                for row in cursor.fetchall():
-                    product = Product(*row)
-                    products_list.append({
-                        "id": row[0],
-                        "name": row[1],
-                        "unit_price": row[2]
-                    })
-                return products_list
 
-        except sqlite3.Error as e:
-            print(f"Error accessing database: {e}")
-            return []
+        conn = sqlite3.connect(self.path)
+        cur = conn.cursor()
+        cur.execute("SELECT id, name, unit_price FROM products")
+        products_list = []
+        for row in cur.fetchall():
+            products_list.append({
+                "id": row[0],
+                "name": row[1],
+                "unit_price": row[2],
+                "quantity": 0,
+                "subtotal": 0
+                })
+        
+        conn.close()
+
+        return products_list
+
     # Verify if a product id inserted by user is in our database     
     def get_product_by_id(self, product_id: int):
-        try:
-            with self.conn:
-                cursor = self.conn.cursor()
-                cursor.execute("SELECT id, name, unit_price FROM products WHERE id = ?", (product_id,))
-                row = cursor.fetchone()
-                if row:
-                    return {
-                        "id": row[0],
-                        "name": row[1],
-                        "unit_price": row[2]
-                    }
-                else:
-                    return None
-        except sqlite3.Error as e:
-            print(f"Error accessing database: {e}")
-            return None
+        conn = sqlite3.connect(self.path)
+        cur = conn.cursor()
+        cur.execute("SELECT id, name, unit_price FROM products WHERE id = ?", (product_id,))
+        row = cur.fetchone()
+        if row:
+            conn.close()
+            return True
+        else:
+            conn.close()
+            return False
 
 class Ticket:
-    def __init__(self):
-        self.products = {}
+
+    def __init__(self, products_list: list, product_id: int, quantity:int):
+        self.products_list = products_list
+        self.product_id = product_id
+        self.quantity = quantity
+
     # Add each product and quantity by user getting a subtotal per product 
-    def add_product(self, product, quantity):
-        if product["id"] in self.products:
-            self.products[product["id"]]["quantity"] += quantity
-        else:
-            self.products[product["id"]] = {
-                "product": product,
-                "quantity": quantity
-            }
-        self.products[product["id"]]["subtotal"] = self.products[product["id"]]["quantity"] * product["unit_price"]
-    # Update all quantities in a list of dictionaries
-    def update_quantities(self, products_list):
-        for product in products_list:
-            self.add_product(product, product["quantity"])
+    def add_product(self):
+        for product in self.products_list:
+            
+            if product["id"] == self.product_id:
+                product["quantity"] += self.quantity
+                product["subtotal"] += product["unit_price"] * self.quantity
+
+        return self.products_list
+    
     # Getting a total for the purchase
-    def total_product_list(self):
-        total = 0
-        for item in self.products.values():
-            total += item["subtotal"]
+    def total_ticket(self):
+        total = sum(product["subtotal"] for product in self.products_list)
         return total
          

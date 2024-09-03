@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS "products" (
 ''')
 
 # Insert data from CSV to products table
-with open(r'data\products.csv', newline='', encoding='utf-8') as csvfile:
+with open(r'data\products.csv', newline='', encoding ='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         cur.execute('''

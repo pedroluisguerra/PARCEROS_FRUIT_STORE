@@ -22,7 +22,8 @@ def test_dao_get_all_products():
     assert product_list[6]["unit_price"] == 0.80
     assert product_list[1]["name"] == "Plátano"
     assert product_list[1]["unit_price"] == 0.30
-    
+
+  
 def test_dao_get_product_by_id():
     dao = DAO_Product(r"data\products.db")
     product1 = dao.get_product_by_id(7)
@@ -33,54 +34,34 @@ def test_dao_get_product_by_id():
     assert  product2["name"] == "Naranja"
     assert  product2["unit_price"] == 0.70
 
-def test_add_product_ticket():
-    ticket = Ticket()
-    
+
+def test_add_product():
     products_list = [
-        {"id": 1, "name": "Manzana", "quantity": 10, "unit_price": 1.2},
-        {"id": 2, "name": "Plátano", "quantity": 5, "unit_price": 0.8},
-        {"id": 3, "name": "Naranja", "quantity": 2, "unit_price": 1.2}
+        {"id": 1, "name": "Manzana", "unit_price": 1.2, "quantity": 1, "subtotal": 1.2},
+        {"id": 2, "name": "Plátano", "unit_price": 0.8, "quantity": 0, "subtotal": 0},
+        {"id": 3, "name": "Naranja", "unit_price": 1.2, "quantity": 2, "subtotal": 2.4}
     ]
 
-        
-    ticket.add_product(products_list[1], products_list[1]["quantity"])
-    assert ticket.products[2]["quantity"] == 5
-    assert ticket.products[2]["subtotal"] == 4
+    ticket = Ticket(products_list, 2, 2)
+    purchase = ticket.add_product()       
+    assert purchase[1]["quantity"] == 2
+    assert purchase[1]["subtotal"] == 1.6
 
-    ticket.add_product(products_list[2], products_list[2]["quantity"])
-    assert ticket.products[3]["quantity"] == 2
-    assert ticket.products[3]["subtotal"] == 2.40
+    ticket = Ticket(products_list, 3, 3)
+    purchase = ticket.add_product()
+    assert purchase[2]["quantity"] == 5
+    assert purchase[2]["subtotal"] == 6
 
-def test_update_quantities():
-    ticket = Ticket()
-    products_list = [
-        {"id": 1, "name": "Manzana", "quantity": 10, "unit_price": 1.2},
-        {"id": 2, "name": "Plátano", "quantity": 5, "unit_price": 0.8},
-        {"id": 1, "name": "Manzana", "quantity": 3, "unit_price": 1.2}
-    ]
-    
-    ticket.update_quantities(products_list)
-    
-    assert ticket.products[1]["quantity"] == 13
-    assert ticket.products[2]["quantity"] == 5
+    ticket = Ticket(products_list, 2, 3)
+    purchase = ticket.add_product()
+    assert purchase[1]["quantity"] == 5
+    assert purchase[1]["subtotal"] == 4
 
-def test_total_product_list():
-    ticket = Ticket()
-    
-    products_list = [
-        {"id": 1, "name": "Manzana", "quantity": 5, "unit_price": 1.2},
-        {"id": 2, "name": "Plátano", "quantity": 3, "unit_price": 0.8},
-        {"id": 1, "name": "Manzana", "quantity": 1, "unit_price": 1.2}
-    ]
-    
-    for product in products_list:
-        ticket.add_product(product, product["quantity"])
-    
-    assert ticket.total_product_list() == 9.6 
+    ticket = Ticket(products_list, 1, 1)
+    purchase = ticket.add_product()
+    assert purchase[0]["quantity"] == 2
+    assert purchase[0]["subtotal"] == 2.4
 
+    assert ticket.total_ticket() == 12.4 
 
-
-
-    
-
-    
+   
