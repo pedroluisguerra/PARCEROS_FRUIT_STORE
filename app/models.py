@@ -58,25 +58,27 @@ class DAO_Product(DAO):
         row = cur.fetchone()
         if row:
             conn.close()
-            return True
+            return {
+                        "id": row[0],
+                        "name": row[1],
+                        "unit_price": row[2]
+                    }
         else:
             conn.close()
             return False
 
 class Ticket:
 
-    def __init__(self, products_list: list, product_id: int, quantity:int):
+    def __init__(self, products_list: list):
         self.products_list = products_list
-        self.product_id = product_id
-        self.quantity = quantity
-
+        
     # Add each product and quantity by user getting a subtotal per product 
-    def add_product(self):
+    def add_product(self, product_id, quantity):
         for product in self.products_list:
             
-            if product["id"] == self.product_id:
-                product["quantity"] += self.quantity
-                product["subtotal"] += product["unit_price"] * self.quantity
+            if product["id"] == product_id:
+                product["quantity"] += quantity
+                product["subtotal"] += product["unit_price"] * quantity
 
         return self.products_list
     

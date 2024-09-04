@@ -42,26 +42,20 @@ def test_add_product():
         {"id": 3, "name": "Naranja", "unit_price": 1.2, "quantity": 2, "subtotal": 2.4}
     ]
 
-    ticket = Ticket(products_list, 2, 2)
-    purchase = ticket.add_product()       
-    assert purchase[1]["quantity"] == 2
-    assert purchase[1]["subtotal"] == 1.6
+    ticket = Ticket(products_list)
+    purchase1 = ticket.add_product(2, 2)       
+    assert purchase1[1]["quantity"] == 2
+    assert purchase1[1]["subtotal"] == 1.6
+   
+    purchase2 = ticket.add_product(3 , 3)
+    assert purchase2[2]["quantity"] == 5
+    assert purchase2[2]["subtotal"] == 6
 
-    ticket = Ticket(products_list, 3, 3)
-    purchase = ticket.add_product()
-    assert purchase[2]["quantity"] == 5
-    assert purchase[2]["subtotal"] == 6
-
-    ticket = Ticket(products_list, 2, 3)
-    purchase = ticket.add_product()
-    assert purchase[1]["quantity"] == 5
-    assert purchase[1]["subtotal"] == 4
-
-    ticket = Ticket(products_list, 1, 1)
-    purchase = ticket.add_product()
+    
+    purchase = ticket.add_product(1, 1)
     assert purchase[0]["quantity"] == 2
     assert purchase[0]["subtotal"] == 2.4
 
-    assert ticket.total_ticket() == 12.4 
+    assert ticket.total_ticket() == 10 
 
    

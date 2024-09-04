@@ -14,9 +14,8 @@ class TitleView:
 
 class TicketView:
     # Visualizing the products list available in our database
-    def __init__(self, product_id, quantity, x: int, y: int, w: int):
-        self.product_id = product_id
-        self.quantity = quantity
+    def __init__(self, products_list:list, x: int, y: int, w: int):
+        self.products_list = products_list
         self.x = x
         self.y = y
         self.w = w
@@ -34,24 +33,40 @@ class TicketView:
         locate(x_1 + 43, self.y + 2, "| UNIT PRICE ")
         locate(x_1 + 56, self.y + 2, "| QUANTITY")
         locate(x_1 + 67, self.y + 2, "| SUBTOTAL |")
-        locate(x_1, self.y + 3, text2)
+        locate(x_1, self.y + 3, text2)     
+                           
 
-
-        dao_products = DAO_Product("data\products.db")
-        products_list = dao_products.get_all_products()
-        ticket = Ticket(products_list, self.product_id, self.quantity)
-        purchase = ticket.add_product()                       
-
-        for index, product in enumerate(purchase):
+        for index, product in enumerate(self.products_list):
             locate(x_1, self.y + 4 + index, f"|{index + 1:5}.-   |{product['id']:8}      |    {product['name']:10}  | {product['unit_price']:7.2f} €  | {product['quantity']:8.2f} | {product['subtotal']:5.2f} €  |\n")
-            
-        total_purcharse = ticket.total_ticket()
-        locate(x_1, self.y + 4 + len(purchase), text2)
-        locate(x_1 + 61, self.y + 5 + len(purchase), f"TOTAL |  {total_purcharse:.2f} €  |\n")
-        
 
-    '''
-    12345678901234567890123456789012345678901234567890123456789012345678901234567890
-    ------------------------------------------------------------------------------
-    | ITEM Nº | PRODUCT CODE |     PRODUCT    | QUANTITY | UNIT PRICE | SUBTOTAL |
-    '''
+        total_purcharse = sum(product["subtotal"] for product in self.products_list)
+        locate(x_1, self.y + 4 + len(self.products_list), text2)
+        locate(x_1 + 61, self.y + 5 + len(self.products_list), f"TOTAL |  {total_purcharse:.2f} €  |\n")
+        
+class InputView:
+
+    def __init__(self, etiqueta: str, x: int, y: int):
+        self.etiqueta = etiqueta
+        self.y = y
+        self.x = x
+        self.value = ""
+
+    def paint(self):
+        locate(self.x, self.y, self.etiqueta)
+        return Input()
+    
+class Input_Product(InputView):
+
+    def paint(self):
+        while True:
+            id = super().paint()
+            try:
+                product_id = int(id)
+                dao_products = DAO_Product("data\products.db")
+                product_found = dao_products.get_product_by_id(product_id)
+                if product_found[0] == product_id:
+                    return product_id
+            except ValueError as e:
+                if id <= 0 or id == "" or id == str or id :
+                    return id
+                locate(self.x, self.y + 1, "Please, insert only a number shown on LIST OF AVAILABLE PRODUCTS or insert X to finish your purchase")

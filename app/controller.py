@@ -6,11 +6,13 @@ class FruitStore:
 
     def __init__(self):
         self.title1 = TitleView("PARCEROS FRUIT STORE")
-        self.title2 = TitleView("YOUR BEST OPTION FOR FRUITS", 2)
-
-        self.ticket_view = TicketView([],0,5,0)
-        self.dao_product = DAO_Product("data/products.db")
-
+        self.title2 = TitleView("====================", 1)
+        self.title3 = TitleView("YOUR BEST OPTION FOR FRUITS!", 3)
+'''
+dao_products = DAO_Product("data\products.db")
+        products_list = dao_products.get_all_products()
+        '''
+        
     def run(self):
         pass
 
