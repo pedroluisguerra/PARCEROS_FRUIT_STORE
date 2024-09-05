@@ -3,7 +3,8 @@ from app.models import Ticket, DAO_Product
 import sqlite3
 
 class TitleView:
-    # Main title 
+    # Esta clase "visualiza" los titulos de la pantalla en la simulación.
+     
     def __init__(self, texto: str, y: int = 0):
         self.texto = texto
         self.y = y
@@ -13,7 +14,8 @@ class TitleView:
         locate(x, self.y, self.texto)
 
 class TicketView:
-    # Visualizing the products list available in our database
+    # Visualiza la lista de productos y el detalle de la compra.
+
     def __init__(self, products_list:list, x: int, y: int):
         self.products_list = products_list
         self.x = x
@@ -40,9 +42,10 @@ class TicketView:
 
         total_purcharse = sum(product["subtotal"] for product in self.products_list)
         locate(x_1, self.y + 4 + len(self.products_list), text2)
-        locate(x_1 + 61, self.y + 5 + len(self.products_list), f"TOTAL |  {total_purcharse:.2f} €  |\n")
+        locate(x_1 + 61, self.y + 5 + len(self.products_list), f"TOTAL | {total_purcharse:5.2f} €  |\n")
         
 class InputView:
+    #Visualiza las entradas que dará el usuario en la compra.
 
     def __init__(self, text: str, x: int, y: int):
         self.text = text
@@ -56,12 +59,14 @@ class InputView:
     
 class InputProduct(InputView):
 
+    #Visualiza y gestiona el dato de código del producto que ingresa el usuario, haciendo las debidas verificaciones.
+
     def paint(self):
         while True:
             id_by_user = super().paint()
 
             if id_by_user.upper() == "X":
-                return None
+                return str("X")
 
             try:
                 product_id = int(id_by_user)
@@ -70,22 +75,22 @@ class InputProduct(InputView):
 
                 if product_id <= 0:
                     locate(self.x, self.y + 1, f'Invalid code. insert only a product code shown on LIST OF AVAILABLE PRODUCTS or insert X to finish your purchase.')
-                    
-                
+                            
                 if product_found and isinstance(product_found, dict) and product_found.get("id") == product_id:
-                    locate(self.x, self.y + 1, "" * 113)
+                    locate(self.x, self.y + 1, " " * 113)
                     return product_id                
                 
                 else:
                     locate(self.x, self.y + 1, f'Invalid code. insert only a product code shown on LIST OF AVAILABLE PRODUCTS or insert X to finish your purchase.')
                     
-
             except ValueError:
 
                 locate(self.x, self.y + 1, f'Invalid code. insert only a product code shown on LIST OF AVAILABLE PRODUCTS or insert X to finish your purchase.')
-                locate(self.x, self.y + 1, "" * 113)
+                
 
 class InputQuantity(InputView):
+
+    #Visualiza y gestiona el dato de cantidad del producto que ingresa el usuario, haciendo las debidas verificaciones.
 
     def paint(self):
         while True:
@@ -96,14 +101,16 @@ class InputQuantity(InputView):
                 quantity = int(quantity_by_user)
                 
                 if quantity <= 0:
-                    locate(self.x, self.y + 1, f'Quantity cannot be negative or zero, only a positive integer')
+                    locate(self.x, self.y + 1, f'Quantity cannot be negative nor zero nor letter, only a positive integer')
 
                 if quantity > 0:
+
+                    locate(self.x, self.y + 1, " " * 113)
                     return quantity
                 
             except ValueError:
 
-                locate(self.x, self.y + 1, f'This is not an integer numbers, only integer accepted')
+                locate(self.x, self.y + 1, f'Quantity cannot be negative nor zero nor letter, only a positive integer')
 
 class InputViewSN(InputView):
         pass
