@@ -44,12 +44,6 @@ produtc3 = ticket.add_product(2, 2)
 product4 = ticket.add_product(5, 1)
 ticket_view = TicketView(products_list, 0, 5, 0)
 
-#ticket = Ticket()
-#ticket_view1 = TicketView(ticket, dao_product, 2, 1, 0, 5, 0)
-#ticket_view2 = TicketView(ticket, dao_product, 10, 2, 0, 5, 0)
-#ticket_view3 = TicketView(ticket, dao_product, 5, 6, 0, 5, 0)
-#ticket_view4 = TicketView(ticket, dao_product, 2, 2, 0, 5, 0)
-
 with Screen_manager:
     #cls()
     title1.paint()

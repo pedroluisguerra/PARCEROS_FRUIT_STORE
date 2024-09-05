@@ -52,20 +52,23 @@ class DAO_Product(DAO):
 
     # Verify if a product id inserted by user is in our database     
     def get_product_by_id(self, product_id: int):
+        #TRY - EXCEPT
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
         cur.execute("SELECT id, name, unit_price FROM products WHERE id = ?", (product_id,))
         row = cur.fetchone()
+        conn.close()
+        
         if row:
-            conn.close()
+            
             return {
                         "id": row[0],
                         "name": row[1],
                         "unit_price": row[2]
                     }
         else:
-            conn.close()
             return False
+        
 
 class Ticket:
 
